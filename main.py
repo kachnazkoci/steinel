@@ -11,30 +11,32 @@ class TargetDisplayApp:
         # První prázdný řádek
         tk.Label(master, text="").grid(row=0, column=0, columnspan=2)
 
-        # Tlačítko
-        self.browse_button = tk.Button(master, text="Browse", command=self.browse_file)
-        self.browse_button.grid(row=1, column=0, columnspan=2)
+        # Druhý řádek: drobné odsazení + Tlačítko BROWSE + odsazení + text "Choose JSON file to display"
+        self.browse_button = tk.Button(master, text="BROWSE", command=self.browse_file)
+        self.browse_button.grid(row=1, column=0, padx=(10, 5), pady=5, sticky='e')
+        self.info_label = tk.Label(master, text="Choose JSON file to display")
+        self.info_label.grid(row=1, column=1, padx=5, pady=5, sticky='w')
 
-        # 20px mezera
+        # Třetí řádek prázdný
         tk.Label(master, text="").grid(row=2, column=0, columnspan=2)
 
-        # Popisek
-        self.info_label = tk.Label(master, text="Choose JSON file to display")
-        self.info_label.grid(row=3, column=0, columnspan=2)
-
-        # Mřížka
+        # Čtvrtý řádek: Mřížka
         self.canvas = tk.Canvas(master, width=700, height=300, bg="white")
-        self.canvas.grid(row=4, column=0, columnspan=2)
+        self.canvas.grid(row=3, column=0, columnspan=2)
 
-        # Další prázdný řádek
-        tk.Label(master, text="").grid(row=5, column=0, columnspan=2)
+        # Pátý řádek prázdný
+        tk.Label(master, text="").grid(row=4, column=0, columnspan=2)
 
-        # Text s čísly
+        # Šestý řádek: odsazení + Total Persons: nr + odsazení + Average certainty: nr
         self.info_text = tk.Label(master, text="")
-        self.info_text.grid(row=6, column=0, columnspan=2)
+        self.info_text.grid(row=5, column=0, columnspan=2, padx=5, sticky='w')
 
-        # Poslední prázdný řádek
-        tk.Label(master, text="").grid(row=7, column=0, columnspan=2)
+        # Sedmý řádek prázdný
+        tk.Label(master, text="").grid(row=6, column=0, columnspan=2)
+
+        self.targets = []
+        self.total_persons = 0
+        self.total_certainty = 0
 
     def browse_file(self):
         file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
@@ -42,8 +44,9 @@ class TargetDisplayApp:
             self.load_targets(file_path)
 
     def load_targets(self, file_path):
-        self.canvas.delete("all")
-        self.info_label.config(text="Loading targets...")
+        self.targets = []
+        self.total_persons = 0
+        self.total_certainty = 0
 
         try:
             with open(file_path, "r") as file:
@@ -54,13 +57,14 @@ class TargetDisplayApp:
                     self.calculate_stats()
                     self.update_info_label()
                 else:
-                    self.info_label.config(text="Invalid JSON format.")
+                    self.info_text.config(text="Invalid JSON format.")
         except FileNotFoundError:
-            self.info_label.config(text="File not found.")
+            self.info_text.config(text="File not found.")
         except json.JSONDecodeError:
-            self.info_label.config(text="Invalid JSON format.")
+            self.info_text.config(text="Invalid JSON format.")
 
     def draw_targets(self):
+        self.canvas.delete("all")
         for target in self.targets:
             x, y = target["x"], target["y"]
             is_person = target["isPerson"]
@@ -69,8 +73,11 @@ class TargetDisplayApp:
             color = "gray"  # default color for non-person targets
             if is_person and certainty > 50:
                 color = "red"
+                self.total_persons += 1
             elif is_person and certainty <= 50:
                 color = "orange"
+                self.total_persons += 1
+            self.total_certainty += certainty
 
             self.canvas.create_rectangle(x * 20, y * 20, (x + 1) * 20, (y + 1) * 20, fill=color)
 
@@ -90,8 +97,10 @@ class TargetDisplayApp:
             self.canvas.create_text(10, i * 20 + 10, text=str(i), fill='black', font=('Arial', 8))
 
     def calculate_stats(self):
-        self.total_persons = sum(1 for target in self.targets if target["isPerson"])
-        self.avg_certainty = sum(target["certainty"] for target in self.targets) / len(self.targets) if self.targets else 0
+        if self.targets:
+            self.avg_certainty = self.total_certainty / len(self.targets)
+        else:
+            self.avg_certainty = 0
 
     def update_info_label(self):
         info_text = f"Total Persons: {round(self.total_persons)}\tAverage Certainty: {round(self.avg_certainty)}"
