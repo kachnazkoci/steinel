@@ -1,0 +1,9 @@
+{
+  "data": [
+    {"x": 8, "y": 4, "isPerson": true, "certainty": 95},
+    {"x": 22, "y": 10, "isPerson": false, "certainty": 0},
+    {"x": 15, "y": 6, "isPerson": true, "certainty": 50},
+    {"x": 27, "y": 8, "isPerson": false, "certainty": 0},
+    {"x": 6, "y": 2, "isPerson": true, "certainty": 40}
+  ]
+}
