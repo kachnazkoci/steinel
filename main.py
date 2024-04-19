@@ -24,7 +24,7 @@ class TargetDisplayApp:
         # Third row: empty
         print()
 
-        # Fourth row: Canvas with drawn targets...canvas, a button and the texts are moved the way I like it better
+        # Fourth row: Canvas with drawn targets...the canvas, the button and the texts are moved the way I like it more
         self.canvas = tk.Canvas(self.root, width=700, height=300, bg="white")
         self.canvas.place(x=30, y=40)  # Canvas starts 30px from the edge of he window
 
