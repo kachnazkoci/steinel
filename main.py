@@ -4,35 +4,43 @@ import json
 import time
 
 class TargetDisplayApp:
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Target Display App")
+    def __init__(self):
+        # Create Tkinter window for displaying points
+        self.root = tk.Tk()
+        self.root.title("Target Display App")
+        self.root.geometry("800x500")  # Set initial window size
 
-        # První prázdný řádek
-        tk.Label(master, text="").grid(row=0, column=0, columnspan=2)
+        # First space: empty
+        print("\n")
 
-        # Druhý řádek: drobné odsazení + Tlačítko BROWSE + odsazení + text "Choose JSON file to display"
-        self.browse_button = tk.Button(master, text="BROWSE", command=self.browse_file)
-        self.browse_button.grid(row=1, column=0, padx=(10, 5), pady=5, sticky='e')
-        self.info_label = tk.Label(master, text="Choose JSON file to display")
-        self.info_label.grid(row=1, column=1, padx=5, pady=5, sticky='w')
+        # Second row: BROWSE Button and text "Choose JSON file to display"
+        browse_button = tk.Button(self.root, text="BROWSE", command=self.browse_file)
+        browse_button.place(x=20, y=9)
+        choose_json_label = tk.Label(self.root, text="Choose JSON file to display")
+        choose_json_label.place(x=85, y=11)
 
-        # Třetí řádek prázdný
-        tk.Label(master, text="").grid(row=2, column=0, columnspan=2)
+        # Third row: empty
+        print()
 
-        # Čtvrtý řádek: Mřížka
-        self.canvas = tk.Canvas(master, width=700, height=300, bg="white")
-        self.canvas.grid(row=3, column=0, columnspan=2)
+        # Fourth row: Canvas with drawn targets
+        self.canvas = tk.Canvas(self.root, width=700, height=300, bg="white")
+        self.canvas.place(x=0, y=40)  # Canvas starts from the top after two empty rows
 
-        # Pátý řádek prázdný
-        tk.Label(master, text="").grid(row=4, column=0, columnspan=2)
+        # Fifth row: empty
+        print()
 
-        # Šestý řádek: odsazení + Total Persons: nr + odsazení + Average certainty: nr
-        self.info_text = tk.Label(master, text="")
-        self.info_text.grid(row=5, column=0, columnspan=2, padx=5, sticky='w')
+        # Sixth row: Total Persons and Average certainty
+        total_persons_label = tk.Label(self.root, text="Total Persons:")
+        total_persons_label.place(x=20, y=360)  # Text is 5px from the edge of the window
+        self.total_persons_value = tk.Label(self.root, text="0")
+        self.total_persons_value.place(x=100, y=360)  # Value is 10px from the text
+        avg_certainty_label = tk.Label(self.root, text="Average Certainty:")
+        avg_certainty_label.place(x=125, y=360)  # Text is 10px from the previous label
+        self.avg_certainty_value = tk.Label(self.root, text="0")
+        self.avg_certainty_value.place(x=230, y=360)  # Value is 10px from the text
 
-        # Sedmý řádek prázdný
-        tk.Label(master, text="").grid(row=6, column=0, columnspan=2)
+        # Seventh row: empty
+        print()
 
         self.targets = []
         self.total_persons = 0
@@ -57,11 +65,11 @@ class TargetDisplayApp:
                     self.calculate_stats()
                     self.update_info_label()
                 else:
-                    self.info_text.config(text="Invalid JSON format.")
+                    print("Invalid JSON format.")
         except FileNotFoundError:
-            self.info_text.config(text="File not found.")
+            print("File not found.")
         except json.JSONDecodeError:
-            self.info_text.config(text="Invalid JSON format.")
+            print("Invalid JSON format.")
 
     def draw_targets(self):
         self.canvas.delete("all")
@@ -70,7 +78,7 @@ class TargetDisplayApp:
             is_person = target["isPerson"]
             certainty = target["certainty"]
 
-            color = "gray"  # default color for non-person targets
+            color = "gray"
             if is_person and certainty > 50:
                 color = "red"
                 self.total_persons += 1
@@ -83,7 +91,7 @@ class TargetDisplayApp:
 
             # draw grid
             self.draw_grid()
-            time.sleep(0.05)  # delay for slower drawing
+            time.sleep(0.05)
 
     def draw_grid(self):
         # draw grid lines
@@ -103,14 +111,17 @@ class TargetDisplayApp:
             self.avg_certainty = 0
 
     def update_info_label(self):
-        info_text = f"Total Persons: {round(self.total_persons)}\tAverage Certainty: {round(self.avg_certainty)}"
-        self.info_text.config(text=info_text)
+        self.total_persons_value.config(text=str(round(self.total_persons)))
+        self.avg_certainty_value.config(text=str(round(self.avg_certainty)))
+
+    def run(self):
+        self.root.mainloop()
 
 
 def main():
-    root = tk.Tk()
-    app = TargetDisplayApp(root)
-    root.mainloop()
+    app = TargetDisplayApp()
+    app.run()
+
 
 if __name__ == "__main__":
     main()
