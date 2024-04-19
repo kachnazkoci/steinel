@@ -24,9 +24,9 @@ class TargetDisplayApp:
         # Third row: empty
         print()
 
-        # Fourth row: Canvas with drawn targets...canvas, a button and the texts are left align
+        # Fourth row: Canvas with drawn targets...canvas, a button and the texts are moved the way I like it better
         self.canvas = tk.Canvas(self.root, width=700, height=300, bg="white")
-        self.canvas.place(x=20, y=40)  # Canvas starts 20px from the edge of he window
+        self.canvas.place(x=30, y=40)  # Canvas starts 20px from the edge of he window
 
         # Fifth row: empty
         print()
