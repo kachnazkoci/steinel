@@ -24,22 +24,22 @@ class TargetDisplayApp:
         # Third row: empty
         print()
 
-        # Fourth row: Canvas with drawn targets
+        # Fourth row: Canvas with drawn targets...canvas, a button and the texts are left align
         self.canvas = tk.Canvas(self.root, width=700, height=300, bg="white")
-        self.canvas.place(x=0, y=40)  # Canvas starts from the top after two empty rows
+        self.canvas.place(x=20, y=40)  # Canvas starts 20px from the edge of he window
 
         # Fifth row: empty
         print()
 
         # Sixth row: Total Persons and Average certainty
         self.total_persons_label = tk.Label(self.root, text="Total Persons:")
-        self.total_persons_label.place(x=20, y=360)  # Text is 5px from the edge of the window
+        self.total_persons_label.place(x=20, y=360)  # Text is 20px from the edge of the window
         self.total_persons_value = tk.Label(self.root, text="0")
-        self.total_persons_value.place(x=100, y=360)  # Value is 10px from the text
+        self.total_persons_value.place(x=100, y=360)  # Value is farther from the text
         self.avg_certainty_label = tk.Label(self.root, text="Average Certainty:")
-        self.avg_certainty_label.place(x=125, y=360)  # Text is 10px from the previous label
+        self.avg_certainty_label.place(x=125, y=360)  # Text is farther from the previous label
         self.avg_certainty_value = tk.Label(self.root, text="0")
-        self.avg_certainty_value.place(x=230, y=360)  # Value is 10px from the text
+        self.avg_certainty_value.place(x=230, y=360)  # Value is farther from the text
         self.total_persons_label.place_forget()
         self.total_persons_value.place_forget()
         self.avg_certainty_label.place_forget()
