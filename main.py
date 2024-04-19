@@ -10,14 +10,16 @@ class TargetDisplayApp:
         self.root.title("Target Display App")
         self.root.geometry("800x500")  # Set initial window size
 
-        # First space: empty
+        # First row: empty
+        print("\n")
+        print("\n")
         print("\n")
 
         # Second row: BROWSE Button and text "Choose JSON file to display"
-        browse_button = tk.Button(self.root, text="BROWSE", command=self.browse_file)
-        browse_button.place(x=20, y=9)
-        choose_json_label = tk.Label(self.root, text="Choose JSON file to display")
-        choose_json_label.place(x=85, y=11)
+        self.browse_button = tk.Button(self.root, text="BROWSE", command=self.browse_file)
+        self.browse_button.place(x=20, y=5)  # Button is 5px from the edge of the window
+        self.choose_json_label = tk.Label(self.root, text="Choose JSON file to display")
+        self.choose_json_label.place(x=100, y=10)  # Text is 10px from the button
 
         # Third row: empty
         print()
@@ -30,14 +32,18 @@ class TargetDisplayApp:
         print()
 
         # Sixth row: Total Persons and Average certainty
-        total_persons_label = tk.Label(self.root, text="Total Persons:")
-        total_persons_label.place(x=20, y=360)  # Text is 5px from the edge of the window
+        self.total_persons_label = tk.Label(self.root, text="Total Persons:")
+        self.total_persons_label.place(x=20, y=360)  # Text is 5px from the edge of the window
         self.total_persons_value = tk.Label(self.root, text="0")
         self.total_persons_value.place(x=100, y=360)  # Value is 10px from the text
-        avg_certainty_label = tk.Label(self.root, text="Average Certainty:")
-        avg_certainty_label.place(x=125, y=360)  # Text is 10px from the previous label
+        self.avg_certainty_label = tk.Label(self.root, text="Average Certainty:")
+        self.avg_certainty_label.place(x=125, y=360)  # Text is 10px from the previous label
         self.avg_certainty_value = tk.Label(self.root, text="0")
         self.avg_certainty_value.place(x=230, y=360)  # Value is 10px from the text
+        self.total_persons_label.place_forget()
+        self.total_persons_value.place_forget()
+        self.avg_certainty_label.place_forget()
+        self.avg_certainty_value.place_forget()
 
         # Seventh row: empty
         print()
@@ -50,6 +56,11 @@ class TargetDisplayApp:
         file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
         if file_path:
             self.load_targets(file_path)
+            # Show Total Persons and Average Certainty labels after loading targets
+            self.total_persons_label.place(x=20, y=360)
+            self.total_persons_value.place(x=100, y=360)
+            self.avg_certainty_label.place(x=125, y=360)
+            self.avg_certainty_value.place(x=230, y=360)
 
     def load_targets(self, file_path):
         self.targets = []
