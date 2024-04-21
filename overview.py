@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import json
 
+
 class TargetDisplayApp:
     def __init__(self):
         self.root = tk.Tk()
@@ -21,16 +22,21 @@ class TargetDisplayApp:
         browse_button = tk.Button(self.root, text="BROWSE", font=("Comic Sans MS", 15), command=self.browse_file)
         browse_button.place(x=100, y=100)
 
-        self.json_file_label = self.canvas.create_text(150, 200, text="", font=("Comic Sans MS", 11), fill="white")  # Label for JSON file name
+        self.choose_json_text = self.canvas.create_text(330, 123, text="Choose JSON file to display",
+                                                        font=("Comic Sans MS", 13), fill="white")
+
+        self.json_file_label = None
 
         self.targets = []
         self.total_persons = 0
         self.total_certainty = 0
 
         # Create text labels for Total Persons and Average Certainty
-        self.total_persons_label = self.canvas.create_text(100, 630, text="Total Persons:", font=("Comic Sans MS", 13), fill="white")
+        self.total_persons_label = self.canvas.create_text(100, 630, text="Total Persons:", font=("Comic Sans MS", 13),
+                                                           fill="white")
         self.total_persons_value = self.canvas.create_text(175, 630, text="0", font=("Comic Sans MS", 13), fill="white")
-        self.avg_certainty_label = self.canvas.create_text(280, 630, text="Average Certainty:", font=("Comic Sans MS", 13), fill="white")
+        self.avg_certainty_label = self.canvas.create_text(280, 630, text="Average Certainty:",
+                                                           font=("Comic Sans MS", 13), fill="white")
         self.avg_certainty_value = self.canvas.create_text(370, 630, text="0", font=("Comic Sans MS", 13), fill="white")
 
     def browse_file(self):
@@ -51,18 +57,13 @@ class TargetDisplayApp:
                     self.draw_targets()
                     self.calculate_stats()
                     self.update_info_label()
-                    self.update_json_file_label(file_path)  # Update the label with the JSON file name
+                    self.update_json_file_label(file_path)
                 else:
                     print("Invalid JSON format.")
         except FileNotFoundError:
             print("File not found.")
         except json.JSONDecodeError:
             print("Invalid JSON format.")
-
-    def update_json_file_label(self, file_path):
-        # Get the file name from the file path and update the label
-        file_name = file_path.split("/")[-1]  # Extract the file name from the file path
-        self.canvas.itemconfig(self.json_file_label, text="Loaded JSON file: " + file_name)
 
     def draw_targets(self):
         for target in self.targets:
@@ -112,12 +113,22 @@ class TargetDisplayApp:
         self.canvas.itemconfig(self.total_persons_value, text=str(round(self.total_persons)))
         self.canvas.itemconfig(self.avg_certainty_value, text=str(round(self.avg_certainty)))
 
+    def update_json_file_label(self, file_path):
+        if self.json_file_label:
+            self.canvas.itemconfig(self.json_file_label, text="Loaded JSON file: " + file_path.split("/")[-1])
+        else:
+            self.json_file_label = self.canvas.create_text(200, 200,
+                                                           text="Loaded JSON file: " + file_path.split("/")[-1],
+                                                           font=("Comic Sans MS", 13), fill="white")
+
     def run(self):
         self.root.mainloop()
+
 
 def main():
     app = TargetDisplayApp()
     app.run()
+
 
 if __name__ == "__main__":
     main()
