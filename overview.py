@@ -5,7 +5,7 @@ import json
 class TargetDisplayApp:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Target Display App")
+        self.root.title("Steinel GridSensor Overview")
         self.root.geometry("1200x675")  # Set window size
 
         self.canvas = tk.Canvas(self.root, width=1200, height=675, highlightthickness=0)
@@ -21,8 +21,7 @@ class TargetDisplayApp:
         browse_button = tk.Button(self.root, text="BROWSE", font=("Comic Sans MS", 15), command=self.browse_file)
         browse_button.place(x=100, y=100)
 
-        choose_json_text = self.canvas.create_text(330, 120, text="Choose JSON file to display",
-                                                   font=("Comic Sans MS", 13), fill="white")
+        self.json_file_label = self.canvas.create_text(150, 200, text="", font=("Comic Sans MS", 11), fill="white")  # Label for JSON file name
 
         self.targets = []
         self.total_persons = 0
@@ -52,10 +51,18 @@ class TargetDisplayApp:
                     self.draw_targets()
                     self.calculate_stats()
                     self.update_info_label()
+                    self.update_json_file_label(file_path)  # Update the label with the JSON file name
                 else:
                     print("Invalid JSON format.")
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            print(f"Error: {e}")
+        except FileNotFoundError:
+            print("File not found.")
+        except json.JSONDecodeError:
+            print("Invalid JSON format.")
+
+    def update_json_file_label(self, file_path):
+        # Get the file name from the file path and update the label
+        file_name = file_path.split("/")[-1]  # Extract the file name from the file path
+        self.canvas.itemconfig(self.json_file_label, text="Loaded JSON file: " + file_name)
 
     def draw_targets(self):
         for target in self.targets:
